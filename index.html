@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recherche de Pharmacies par Zone</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { height: 100vh; width: 100%; }
+
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 280px;
+        }
+
+        .control-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .control-button i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .control-button span {
+            flex: 1;
+            text-align: left;
+        }
+
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .control-button.clear {
+            background: #dc3545;
+        }
+
+        .control-button.green {
+            background: #28a745;
+        }
+
+        .control-button.blue {
+            background: #007bff;
+        }
+
+        .control-button.active {
+            outline: 3px solid #ffc107;
+            outline-offset: -1px;
+        }
+
+        #message-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: auto;
+            pointer-events: none;
+        }
+
+        #stats {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            text-align: center;
+            pointer-events: auto;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        #mode-info {
+            background: #fff3cd;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            text-align: center;
+            display: none;
+            pointer-events: auto;
+            font-size: 14px;
+        }
+
+        #stats strong {
+            color: #4285f4;
+            font-size: 18px;
+        }
+
+        .distance-point {
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .control-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <button class="control-button" onclick="searchVisibleArea()">
+            <i class="fas fa-search-location"></i>
+            <span>Chercher les pharmacies</span>
+        </button>
+        <button class="control-button clear" onclick="clearMap()">
+            <i class="fas fa-trash-alt"></i>
+            <span>Effacer la carte</span>
+        </button>
+        <button class="control-button green" id="addEmptyZoneBtn" onclick="toggleEmptyZoneMode()">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>Marquer zone sans pharmacie</span>
+        </button>
+        <button class="control-button blue" id="measureDistanceBtn" onclick="toggleDistanceMode()">
+            <i class="fas fa-ruler-horizontal"></i>
+            <span>Mesurer une distance</span>
+        </button>
+    </div>
+
+    <div id="message-container">
+        <div id="stats"></div>
+        <div id="mode-info">
+            <i class="fas fa-info-circle"></i>
+            Cliquez sur la carte pour marquer une zone sans pharmacie
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="config.js"></script>
+    <script src="map.js"></script>
+    <script>
+        function loadGoogleMapsAPI() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&libraries=places,geometry&callback=initMap`;
+            script.async = true;
+            script.defer = true;
+            document.body.appendChild(script);
+        }
+        loadGoogleMapsAPI();
+    </script>
+</body>
+</html>
