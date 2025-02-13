@@ -1,5 +1,5 @@
 const config = {
-    apiKey: 'AABCDEFGAFPNLNQDOJPL?QDLKNQA',
+    apiKey: 'AIzaSyA4OIjoWOzSgskSE_s0fcSK3w6eIy45A5A',
     mapSettings: {
         center: {
             lat: 31.7917,
